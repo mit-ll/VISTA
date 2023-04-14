@@ -1,0 +1,16 @@
+version: "3.9"
+services: 
+    authority:
+        build: .
+        image: vista:latest
+        ports: 
+            - "8000:8000"
+        command: python -m uvicorn --host 0.0.0.0 vista.server:app
+    client:
+        depends_on: 
+            - authority
+        image: vista:latest
+        command: python -m vista.client --url http://authority:8000 run --duration 10
+        environment: 
+            - no_proxy=authority
+        
